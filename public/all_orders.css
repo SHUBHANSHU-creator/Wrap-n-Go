@@ -1,0 +1,30 @@
+body{
+    background-color: white;
+    top: 50%;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    top: 50%;
+    transform: translateY(-40%);
+    background-color: whitesmoke;
+    opacity: 80%;
+    margin-left: 20%;
+    margin-right: 20%;
+    border-radius: 20px;
+}
+
+.card1{
+    background-color: aqua;
+    width: 80%;
+    color: rgb(16, 17, 12);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

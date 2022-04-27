@@ -1,0 +1,29 @@
+body{
+    background-repeat: no-repeat;
+	background-image: url("menu.jpg");  
+	background-size: cover; 
+}
+
+.message{
+    color: white;
+    background-color: green;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    border-radius: 20px;
+    
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+}
+
+.btn{
+    border-radius: 5px;
+
+}

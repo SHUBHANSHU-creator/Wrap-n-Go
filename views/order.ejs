@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="order.css">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div>
+        <!-- <img src="order.jpg" alt=""> -->
+        <div class="box">
+            
+            <h2 style="color: white;">Order Details</h2>
+
+            <form action="/order" method="POST">
+
+                <div class="form-group">
+                    <!-- <label for="phone">First Name</label> -->
+                    <input type="text" class="form-control" name="fname" placeholder="First Name">
+                </div>
+                
+                <br>
+
+                <div class="form-group">
+                    <!-- <label for="phone">Last Name</label> -->
+                    <input type="text" class="form-control" name="lname" placeholder="Last Name">
+                </div>
+                
+                <br>
+
+                <div class="form-group">
+                    <!-- <label for="phone">Phone number</label> -->
+                    <input type="number" class="form-control" name="phnum" placeholder="Phone Number">
+                </div>
+
+                <br>
+
+                <div class="form-group">
+                    <!-- <label for="text">Adress</label> -->
+                    <input type="text" class="form-control" name="adress" placeholder="Adress">
+                </div>
+
+                <button type="submit" class="btn">Order</button>    
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
