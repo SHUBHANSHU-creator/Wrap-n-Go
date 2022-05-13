@@ -253,13 +253,13 @@ app.post('/login',function(req,res){
 //     var transporter = nodemailer.createTransport({
 //         service: 'gmail',
 //         auth: {
-//           user: "nikhita.garg2020@vitbhopal.ac.in",
-//           pass: 'vit_Nik_10'
+//           user: "",
+//           pass: ''
 //         }
 //       });
       
 //       message = {
-//         from: "nikhita.garg2020@vitbhopal.ac.in",
+//         from: "",
 //         to: req.body.email,
 //         subject: 'OTP to update password',
 //         text: a
