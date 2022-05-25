@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify"
   },
   "keywords": [
     "DSN",
@@ -15,6 +16,7 @@
   "dependencies": {
     "axios": "^0.26.1",
     "body-parser": "^1.19.1",
+    "browserify": "^17.0.0",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^4.6.0",
     "connect-mongodb-session": "^3.1.1",
@@ -23,8 +25,8 @@
     "express-flash": "^0.0.2",
     "express-session": "^1.17.2",
     "mongoose": "^6.2.0",
-    "nodemailer": "^6.7.2",
-    "nodemon": "^2.0.15",
+    "nodemailer": "^6.7.5",
+    "nodemon": "^2.0.16",
     "passport": "^0.5.2",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^7.0.0",

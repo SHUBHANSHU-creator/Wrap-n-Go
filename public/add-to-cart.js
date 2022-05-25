@@ -1,33 +1,29 @@
-// // import axios from 'axios'
-// const Window = require('window');
-// // var router = require('router')
- 
-// const window = new Window();
-//     let addtocart=window.document.querySelectorAll('.add-to-cart')
-//         // function updateCart(dish){
-//         //     axios.post('/update-cart',pizza).then(res=>{
-//         //         console.log(res);
-//         //     })
-             
-//         // }
-        
-//         let cart=[]
+let addtocart=document.querySelectorAll('#add-to-cart')
 
+
+function updateCart(dish){
+  // console.log('hello');
+  // console.log(dish);
+  
+  fetch("http://localhost:3000/update-cart",{
+    method: 'POST',
+    body: JSON.stringify(dish), 
     
-//         addtocart.forEach(function(btn){
-//             btn.addEventListener('click',(e)=>{
-//                 let dish=JSON.parse(btn.dataset.dish)
-//                 console.log(dish)
-//                 // cart.push([dish[1],dish[2]])
-//                 // console.log(cart)
-//                 // updateCart(dish)
-                
-//         })
-//     })
+  })
 
-//     // module.exports = router;
+  .then((res) => res.json())
+  .then((data) => console.log(data))
+  .catch((err) => console.log(err))
 
-function myFunction() {
-    var element = document.getElementById("myDIV");
-    console.log('Hello world')
-  }
+}
+ 
+
+
+
+addtocart.forEach((btn)=>{
+  btn.addEventListener('click',(e)=>{
+    let dish=JSON.parse(btn.dataset.dish)
+    // console.log(dish);
+    updateCart(dish);
+  })
+})

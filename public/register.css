@@ -1,11 +1,17 @@
+html{
+    height: 100%;
+}
+
 body{
     background-color: beige;
     font-family: 'Times New Roman', Times, serif;
 	background-image: url("register.jpg");  
     background-repeat: no-repeat;
-    background-position: center; 
-    height: 90vh;
+    background-position: inherit; 
+    height: -20vh;
     overflow-x: hidden;
+    
+    
 }
 
 .message{
@@ -56,3 +62,4 @@ body{
     background-color: rgb(216, 159, 84);
     color: white;
 }
+

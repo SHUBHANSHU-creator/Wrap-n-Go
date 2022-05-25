@@ -9,6 +9,8 @@ const passportLocalMongoose=require('passport-local-mongoose')
 var flush = require('connect-flash')
 // const mongoSession=require('connect-mongodb-session')
 // const MongoDbStore=require('connect-mongo')(session)
+const MongoStore = require('connect-mongo');
+const axios = require('axios').default;
 
 
 const app= express()
@@ -16,7 +18,30 @@ const app= express()
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(express.static('public'));
-app.use(express.json())
+app.use(express.json({
+  type: "*/*"
+}))
+
+
+
+
+
+
+//-----------------------------Database connections------------------------------
+
+// const connection=mongoose.connection;
+mongoose.connect('mongodb://localhost:27017/newuse');
+
+
+
+
+//Collections imported
+const User=require('./models/user');
+const Dish=require('./models/dish');
+//const Cart=require('./models/cart');
+const Order=require('./models/order');
+const e = require('connect-flash');
+const { request } = require('express');
 
 
 
@@ -24,10 +49,19 @@ app.use(express.json())
 app.use(session({
     secret: 'my name is shubhanshu',
     resave: false,
- //    store:mongoStore,
+    store: MongoStore.create({
+        mongoUrl: 'mongodb://localhost:27017/newuse'
+    }),
+    unset: 'destroy',
     saveUninitialized: false,
- //    cookie: {maxAge:1000*60*60*15}
+    cookie: {maxAge:1000 *60* 60}//timelimit for the session->60 mins
  }))
+
+
+//  app.use(function(req,res){
+//     res.locals.session=req.session
+    
+// })
 
 
 app.use(passport.initialize());
@@ -37,39 +71,9 @@ app.use(flush());
 
 
 
-
-
-
-//-----------------------------Database connections------------------------------
-
-mongoose.connect('mongodb://localhost:27017/newuse');
-// const connection=mongoose.connection;
-
-
-//Collections imported
-const User=require('./models/user');
-const Dish=require('./models/dish');
-//const Cart=require('./models/cart');
-const Order=require('./models/order');
-const e = require('connect-flash');
-
-
-
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
-
-
-//Session Store
-// let mongoStore=new MongoDbStore({
-//                 mongooseConnection:connection,
-//                 collection:'sessions'
-
-//             })
-
-
-
 
 
 
@@ -86,22 +90,34 @@ passport.deserializeUser(User.deserializeUser());
 
 
 //get requests
-let dish_arr=[]
-Dish.find(function(err,dishes){
-    if (err){
+let dish_ar=[]
+Dish.find(async function(err,dishes){
+    if(err){
         console.log(err);
     }else{
-        dishes.forEach(function(dish){
-            dish_arr.push([dish.id,dish.name,dish.price])
-        })
+        dish_ar=dishes;
+        return
     }
-});
+})
 
 
 app.get('/',function(req,res){
-    res.render('home',{dishes:dish_arr, message:req.flash('message')});
+    // console.log(dish_ar);
+    res.render('home',{dishes:dish_ar,message:req.flash('message')});
     
 })
+
+
+
+
+app.post('/',function(req,res){
+    // p_id=req.body.id
+    // console.log(req.body);
+    
+    
+    
+})
+
 
 app.get('/register',function(req,res){
     res.render('register',{message:req.flash('message')})
@@ -109,7 +125,7 @@ app.get('/register',function(req,res){
 })
 
 app.get('/login',function(req,res){
-    res.render('login')
+    res.render('login',{message:req.flash('message')})
 })
 
 // app.get('/update_pwd',function(req,res){
@@ -124,64 +140,6 @@ app.get('/subscribe',function(req,res){
 
 
 
-//--------------------------------------------------Register page-------------------------------
-//post request from register page
-// app.post('/register',function(req,res){
-//     //checking if password field and confirm password fields are same
-//     if (req.body.password == req.body.password1){
-//         //checking if the email is already registered
-//         User.findOne({email:req.body.email},function(err,founduser){
-//             if(err){
-//                 console.log(err);
-//             }else{
-//                 if(founduser){
-//                     res.send('email already exists')
-//                 }else{
-//                     User.findOne({phonenum:req.body.phnum},function(err,foundnum){
-//                         if(err){
-//                             console.log(err)
-//                         }else{
-//                             if(foundnum){//if already number is registered 
-//                                 res.send('phone number already registered, please try using new number or login using previous one')
-//                             }
-//                             else{
-//                                 //If phone number and email are not registered then create a new id for user 
-//                                 //adding all the detais to the database
-//                                 const newuser=new User({
-//                                     Firstname:req.body.fname,
-//                                     Lastname:req.body.lname,
-//                                     adress:req.body.adress,
-//                                     phonenum:req.body.phnum,
-//                                     email:req.body.email,
-//                                     password:req.body.password
-//                                 })
-                            
-//                                 newuser.save(function(err){
-//                                     if(err){
-//                                         console.log(err)
-//                                     }else{
-//                                         res.redirect('/login')
-//                                     }
-//                                 })
-//                             }
-//                         }
-//                     })
-
-                    
-//                 }
-//             }
-//         })
-    
-    
-    
-    
-
-// }else{
-//     //if password fields not matched then show error
-//     res.send('password not matched')
-//     res.render('register')
-// }  
-// });
 
 app.post('/register',function(req,res){
     User.register({username:req.body.username},req.body.password,function(err,user){
@@ -206,26 +164,6 @@ app.post('/register',function(req,res){
     })
 })
 
-//----------------------------------------------login page-------------------------------------
-
-// app.post('/login',function(req,res){
-//     User.findOne({username:req.body.email},function(err,founduser){
-//         if(err){
-//             res.send(err)
-//         }else{
-//             if(founduser){
-//                 if(founduser.password==req.body.password){
-//                     res.redirect('/')
-//                 }else{
-//                     res.send('Wrong Password')
-//                 }
-//             }else{
-//                 res.send('You are not registered')
-//             }
-//         }
-//     })
-    
-// })
 
 app.post('/login',function(req,res){
     const user=new User({
@@ -247,35 +185,68 @@ app.post('/login',function(req,res){
 
 
 
-//------------------------mailing for update password-------------------
-// app.post('/update_pwd',function(req,res){
-//     var a=Math.floor(Math.random() * 9999) + 1000;
-//     var transporter = nodemailer.createTransport({
-//         service: 'gmail',
-//         auth: {
-//           user: "",
-//           pass: ''
-//         }
-//       });
+// ------------------------mailing for update password-------------------
+
+let value=false
+
+app.get('/update-pwd',function(req,res){
+    res.render('update-pwd',{value:value,message:req.flash('message')}) 
+})
+
+
+
+//xhmmhwzvnxxromtk
+app.post('/update-pwd',function(req,res){
+    OT=0
+    if(!value){
+        var OTP=Math.floor(Math.random() * 9999) + 1000;
+        OT=OTP
+        var transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "shukumarbham0@gmail.com",
+          pass: "xhmmhwzvnxxromtk"
+        }
+      });
       
-//       message = {
-//         from: "",
-//         to: req.body.email,
-//         subject: 'OTP to update password',
-//         text: a
-//         }
-//    transporter.sendMail(message, function(err, info) {
-//         if (err) {
-//           console.log(err)
-//         } else {
-//           console.log(info);
-//         }
-//     })
-// })
+      message = {
+        from: "shukumarbham0@gmail.com",
+        to: req.body.username,
+        subject: 'OTP to update password',
+        text: OTP.toString()
+        }
+   transporter.sendMail(message, function(err, info) {
+        if (err) {
+          console.log(err)
+          req.flash('message', err);
+        } else {
+          console.log(info);
+          value=true
+        //   console.log(OTP);
+          res.render('update-pwd',{value:value,OTP:OTP.toString()})
+        }
+    })
+    }else{
+        console.log(req.body.OTP,req.body.OT);
+        if (req.body.OTP==req.body.OT){
+            req.flash('message', 'Correct OTP');
+            res.redirect('/')
+        }else{
+            value=false
+            res.render('update-pwd',{value:value})
+        }
+    }
+    
+    
+    
+    
+})
 
 
-    //------enter flash function???????????????????????????????
-    // res.end('Mail sent')
+
+
+    // ------enter flash function???????????????????????????????
+    
 
     // if(a==req.body.otp){
     //     res.redirect('/login')
@@ -284,76 +255,12 @@ app.post('/login',function(req,res){
     // }
 
 
-let cart_ar=[]
-let total_price=0
-let names=[]
-
-
-app.post('/add-to-cart',function(req,res){
-    let a=req.body.id  
-    Dish.findOne({_id:a},function(err,founddish){
-        // console.log(a);
-        // console.log(founddish);
-        if(err){
-            res.send(err)
-        }else{
-            if(founddish){
-                    cart_ar.push([founddish.name,founddish.price])
-                    names.push(founddish.name)
-                    total_price+=founddish.price
-                
-                // console.log(founddish.name,founddish.price);
-                // if(founddish.name in names){
-                //     for(let i=0;i<cart_ar.length;i++){
-                //         if(founddish.name==cart_ar[i][0]){
-                //             cart_ar[i][2]+=1
-                //             total_price+=founddish.price
-                //         }
-                //     }
-                    
-                // }else{
-                //     cart_ar.push([founddish.name,founddish.price,1])
-                //     names.push(founddish.name)
-                //     total_price+=founddish.price
-                // }
-                // console.log(names);
-                
-
-
-            }
-        }
-    })
-    
-    
-});
 
 
 
-// if(founddish){
-//     // console.log(founddish.name,founddish.price);
-//     for(let j=0;j<names.length;j++){
-//         if(founddish.name==names[j]){
-//             for(let i=0;i<cart_ar.length;i++){
-//                 if(founddish.name==cart_ar[i][0]){
-//                     cart_ar[i][2]+=1
-//                     total_price+=founddish.price
-//                 }
-//             }
-//         }
-//         else{
-//             cart_ar.push([founddish.name,founddish.price,1])
-//             names.push(founddish.name)
-//             total_price+=founddish.price
-//         } 
-//     }
-// }
 
 
-// for(let i=0;i<cart_ar.length;i++){
-//     total_price+=cart_ar[i][1]
-// }
 
-// console.log(total_price)
 
 app.get('/subscription',function(req,res){
     if(req.isAuthenticated()){
@@ -363,14 +270,14 @@ app.get('/subscription',function(req,res){
                     req.flash('message', 'You are already Subscribed to our tiffin service');
                     res.redirect('/')
                 }else{
-                    cart_ar.push(['Tiffin',500])
+                    cart_ar.push(['Tiffin',500,"food/meal.jpg",1])
                     total_price+=500
                     res.redirect('/cart')
                 }
                 
             }
         }else{
-            cart_ar.push(['Tiffin',500])
+            cart_ar.push(['Tiffin',500,"food/meal.jpg",1])
             total_price+=500
             res.redirect('/cart')
         }
@@ -399,9 +306,77 @@ app.get('/unsubscribe',function(req,res){
 
 
 
+
+
+
 app.get('/cart',function(req,res){
-    res.render('cart',{carts:cart_ar, total:total_price})
+    let cart_ar=[]
+    let total_price=0
+    
+    ses=req.session.cart
+    if(ses){
+        let keyss=Object.keys(req.session.cart.items)
+        keyss.forEach(function(key){
+            cart_ar.push([ses.items[key].item.name,ses.items[key].item.price,ses.items[key].item.img,ses.items[key].qty])
+        })
+
+
+        for(let i=0; i<cart_ar.length;i++){
+            total_price+=cart_ar[i][1]*cart_ar[i][3]
+        }
+
+        console.log(cart_ar);
+        res.render('cart',{carts:cart_ar,totalPrice:total_price})
+        
+        // console.log(req.session.cart);
+    }else{
+        let noprod="No products found"
+        res.render('cart',{carts:cart_ar,noprod:noprod,totalPrice:total_price})
+    }
+
+    
+
+    
+        
+
+        
+    
+    
+
+
+    
 })
+
+
+
+
+app.post('/update-cart',function(req,res){
+    if(!req.session.cart){
+        req.session.cart={
+            items:{},//items{productid:{qty:0}}
+            totalQty:0,
+        }
+    }  
+    let cart= req.session.cart
+    if(!cart.items[req.body._id]){
+        cart.items[req.body._id]={item:req.body,
+            qty:1 
+        }
+        cart.totalQty=cart.totalQty+1
+        // cart.totalPrice=cart.totalPrice+req.body.price
+    }else{
+        cart.items[req.body._id].qty=cart.items[req.body._id].qty+1
+        cart.totalQty=cart.totalQty+1
+        // cart.totalPrice=cart.totalPrice+req.body.price
+    }
+    
+    
+    
+    
+    res.redirect('/')
+})
+
+
 
 app.get('/order',function(req,res){
     res.render('order')

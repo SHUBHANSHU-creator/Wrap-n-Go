@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="register.css">
+    <title>Document</title>
+
+</head>
+<body>
+    <% if(message.length>0) { %>
+        <div class="message">
+          <%=message%>  
+        </div>
+      <% } %>
+
+
+  <div >
+    <!-- <img src="register.jpg" alt=""  > -->
+    <div class="box">
+      
+
+      
+
+
+
+        <%if(!value){ %>
+            <form action="/update-pwd" method="POST" class="box">
+                
+                    <h1 style="color: white;">Update Password</h1>
+                    <div class="form-group">
+                        <!-- <label for="email">Email</label> -->
+                        <input type="email" id="email"  class="form-control" name="username" placeholder="E-mail">
+
+                    </div>
+                    <button type="submit" class="btn"  onclick="myFunction()">Update Password</button>
+            </form>
+            <% }else{ %>
+                <form action="/update-pwd" method="POST" class="box">
+                    <div class="form-group OTP" >
+                        <!-- <label for="email">OTP</label> -->
+                        <input type="number" id="OTP"  class="form-control" name="OTP" placeholder="OTP">
+                    </div>
+                    <input type="hidden" name="OT" value="<%=OTP%>">
+                    <!-- <p style="color: white;"><%=OTP%></p> -->
+                    <button type="submit"  class="btn"  onclick="myFunction()">Verify OTP</button>
+                </form>     
+            <% } %>
+                
+                
+                
+                
+
+                
+            
+              
+
+            
+            
+        
+          
+      
+    </div>
+
+        
+    <script>
+
+        // function myFunction() {
+        //     var x = document.getElementById("email");
+        //     x.setAttribute('type','hidden'); 
+
+        //     var y = document.getElementById("OTP");
+        //     y.setAttribute('type','number'); 
+
+
+            
+        // }
+       
+
+    </script>
+
+</body>
+</html>

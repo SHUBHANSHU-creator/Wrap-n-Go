@@ -18,6 +18,17 @@ body{
     border-radius: 20px;
 }
 
+.box1{
+    display: flex;
+    /* justify-content: center; */
+    /* align-items: center; */
+    flex-direction: row;
+    flex-wrap: wrap;
+    top: 50%;
+    margin: 10%;
+    /* max-width: 90%; */
+}
+
 .card1{
     background-color: aqua;
     width: 80%;

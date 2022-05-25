@@ -57,20 +57,29 @@
      
     <div class="container">
             <h1 style="border-bottom: 2px; border-style: double; border-radius: 10px;">Your Cart</h1>
-            <% console.log(carts)%>    
-            <% for(let i=0; i< carts.length ; i++){ %>
-                <div class="card1">
-                    
-                        <p>ITEM:<%=carts[i][0]%></p>
-                        <p>PRICE:<%=carts[i][1]%></p>
-                        
+            <div class="box1">
+              <%if(carts.length>0){%>
+                <% for(let i=0; i< carts.length ; i++){ %>
+                  <div class="card" style="width: 18rem; margin: 5px;">
+                    <img src="food/<%=carts[i][2]%>" style="height: 200px;"  class="card-img-top" alt="food">
+                    <div class="card-body">
+                      <h5 class="card-title" ><%=carts[i][0]%></h5>
+                      <p class="card-text" >Rs.<%=carts[i][1]%></p>
+                      <p class="card-text" >Qty:<%=carts[i][3]%></p>
+                      <!-- <a href="#" class="btn btn-primary" name="id"  type="submit">Add to cart</a> -->
+                      
+                    </div>
+                  </div>
+                  <% } %> 
 
-                    
-                </div>
-                <br>
-            <% } %>
+              <% }else{ %>
+                <p style="font-weight: bold; font-size:50px"><%=noprod%></p>
+              <% } %>  
+              
+                   
+            </div>
 
-            <h2>Total price :Rs. <%=total%></h2>
+            <h2>Total Price: Rs:<%=totalPrice%></h2>
 
             <form action="/order">
                 <button>Order</button>
